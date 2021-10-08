@@ -12,8 +12,8 @@
 
 	<!-- VO/DTO 객체의 풀네임을 일반 클래스명으로 사용하기 위해 별칭 선언 -->
 	<typeAliases>
-		<typeAlias type="com.kh.mybatis.member.model.vo.Member"
-			alias="Member" />
+		<typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="Member" />
+		<typeAlias type="com.kh.mybatis.board.model.vo.Board" alias="Board" />
 	</typeAliases>
 
 	<!-- DB 연결 설정 -->
@@ -32,6 +32,7 @@
 	<!-- DB에 사용되는 쿼리문을 담은 mapper 파일을 등록 -->
 	<mappers>
 		<mapper resource="/mappers/member-mapper.xml" />
+		<mapper resource="/mappers/board-mapper.xml" />
 	</mappers>
 
 </configuration>

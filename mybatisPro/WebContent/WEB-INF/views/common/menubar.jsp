@@ -34,7 +34,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-	<
+	
 	<h1 align="center">Welcome to MyBatis World!!</h1>
 	<br>
 	
@@ -69,7 +69,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><button>마이페이지</button></td>
+					<td><button onclick="location.href='mypage.me'">마이페이지</button></td>
 					<td><button onclick="location.href='logout.me';">로그아웃</button></td>
 				</tr>
 			</table>

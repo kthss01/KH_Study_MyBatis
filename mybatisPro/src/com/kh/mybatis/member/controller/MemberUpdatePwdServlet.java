@@ -13,18 +13,18 @@ import com.kh.mybatis.member.model.service.MemberServiceImpl;
 import com.kh.mybatis.member.model.vo.Member;
 
 /**
- * Servlet implementation class loginServlet
+ * Servlet implementation class MemberUpdatePwdServlet
  */
-@WebServlet("/login.me")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/updatePwd.me")
+public class MemberUpdatePwdServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    
 	private MemberService memberService = new MemberServiceImpl();
 	
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public MemberUpdatePwdServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,33 +33,26 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String userId = request.getParameter("userId");
+		
+		String userId = ((Member) request.getSession().getAttribute("loginUser")).getUserId();
+		
 		String userPwd = request.getParameter("userPwd");
+		String newPwd = request.getParameter("newPwd");
 		
-		Member m = new Member();
-		m.setUserId(userId);
-		m.setUserPwd(userPwd);
-		
-		Member loginUser;
-		
+		Member updateMem;
 		try {
-			loginUser = memberService.loginMember(m);
-//			System.out.println(loginUser);
+			updateMem = memberService.updatePwd(userId, userPwd, newPwd);
 			
-			if (loginUser != null) {
-				request.getSession().setAttribute("loginUser", loginUser);
-				response.sendRedirect(request.getContextPath());
-			} else {
-				throw new Exception();
-			}
-			
-		} catch (Exception e) {
-			request.setAttribute("msg", "로그인 실패");
+			request.getSession().setAttribute("loginUser", updateMem);
+			request.setAttribute("msg", "비밀번호 변경 성공");
+			request.setAttribute("sTag", "Y");
+			request.getRequestDispatcher("WEB-INF/views/member/pwdUpdateForm.jsp").forward(request, response);
+		} catch (Exception e) {			
+			request.setAttribute("msg", "비밀번호 변경 실패");
 			request.getRequestDispatcher("WEB-INF/views/common/errorPage.jsp").forward(request, response);
 			
 			e.printStackTrace();
 		}
-		
 	}
 
 	/**

@@ -6,7 +6,7 @@
 		<id property="boardNo" column="BOARD_NO"/>
 		<result property="boardTitle" column="BOARD_TITLE"/>
 		<result property="boardContent" column="BOARD_CONTENT"/>
-		<result property="boardWriter" column="BOARD_WRITER"/>
+		<result property="boardWriter" column="USER_ID"/>
 		<result property="count" column="COUNT"/>
 		<result property="createDate" column="CREATE_DATE"/>
 		<result property="status" column="STATUS"/>
@@ -19,11 +19,61 @@
 	</select>
 
 	<select id="selectList" resultMap="boardResultMap">
-		SELECT BOARD_NO, BOARD_TITLE, USER_ID, COUNT, CREATE_DATE
+		SELECT BOARD_NO, BOARD_TITLE, USER_ID, COUNT, CREATE_DATE 
 		FROM BOARD B
 		JOIN MEMBER ON(BOARD_WRITER=USER_NO)
 		WHERE B.STATUS='Y'
 		ORDER BY BOARD_NO DESC
 	</select>
 
+	<select id="getListCountCon" parameterType="SearchCondition" resultType="_int">
+		SELECT COUNT(*) 
+		FROM BOARD B
+		JOIN MEMBER ON(BOARD_WRITER=USER_NO)
+		WHERE B.STATUS = 'Y'
+		<if test="writer != null">
+			AND USER_ID LIKE '%' || #{writer} || '%'
+		</if>
+		<if test="title != null">
+			AND BOARD_TITLE LIKE '%' || #{title} || '%'
+		</if>
+		<if test="content != null">
+			AND BOARD_CONTENT LIKE '%' || #{content} || '%'
+		</if>
+	</select>
+
+	<select id="selectListCon" parameterType="SearchCondition" resultMap="boardResultMap">
+		SELECT BOARD_NO, BOARD_TITLE, USER_ID, COUNT, CREATE_DATE
+		FROM BOARD B
+		JOIN MEMBER ON(BOARD_WRITER=USER_NO)
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<choose>
+				<when test="writer != null">
+					AND USER_ID LIKE '%' || #{writer} || '%'
+				</when>
+				<when test="title != null">
+					AND BOARD_TITLE LIKE '%' || #{title} || '%'
+				</when>
+				<when test="content != null">
+					AND BOARD_CONTENT LIKE '%' || #{content} || '%'
+				</when>
+			</choose>
+		</trim>
+		AND B.STATUS='Y'
+		ORDER BY BOARD_NO DESC
+	</select>
+	
+	<update id="addCount">
+		UPDATE BOARD
+		SET COUNT = COUNT + 1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	<select id="selectBoard" resultMap="boardResultMap">
+		SELECT BOARD_NO, BOARD_TITLE, USER_ID, COUNT, CREATE_DATE
+		FROM BOARD B
+		JOIN MEMBER ON(BOARD_WRITER=USER_NO)
+		WHERE B.STATUS='Y'
+		AND BOARD_NO = #{boardNo}
+	</select>
 </mapper>

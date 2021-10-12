@@ -1,7 +1,6 @@
 package com.kh.mybatis.board.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,21 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 import com.kh.mybatis.board.model.service.BoardService;
 import com.kh.mybatis.board.model.service.BoardServiceImpl;
 import com.kh.mybatis.board.model.vo.Board;
-import com.kh.mybatis.board.model.vo.PageInfo;
-import com.kh.mybatis.common.Pagination;
 
 /**
- * Servlet implementation class BoardListServlet
+ * Servlet implementation class BoardDetailServlet
  */
-@WebServlet("/list.bo")
-public class BoardListServlet extends HttpServlet {
+@WebServlet("/detail.bo")
+public class BoardDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+    
 	private BoardService boardService = new BoardServiceImpl();
-       
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BoardListServlet() {
+    public BoardDetailServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,36 +34,30 @@ public class BoardListServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int listCount = 0;
+		int bno = Integer.parseInt(request.getParameter("bno"));
+		
 		try {
-			listCount = boardService.getListCount();
-//			System.out.println(listCount);
-			
-			int currentPage = 1;
-			
-			if (request.getParameter("currentPage") != null) {
-				currentPage = Integer.parseInt(request.getParameter("currentPage"));
-			}
-			
-			int pageLimit = 10;
-			int boardLimit = 5;
-			
-			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-			
-			ArrayList<Board> list = boardService.selectList(pi);
-			
-			request.setAttribute("list", list);
-			request.setAttribute("pi", pi);
-			
-			request.getRequestDispatcher("WEB-INF/views/board/boardListView.jsp").forward(request, response);
-			
+			boardService.addCount(bno);
 		} catch (Exception e) {
-			e.printStackTrace();
-			
-			request.setAttribute("msg", "게시판 조회 실패");
+			request.setAttribute("msg", "게시판 조회 수 증가 실패");
 			request.getRequestDispatcher("WEB-INF/views/common/errorPage.jsp").forward(request, response);
+			
+			e.printStackTrace();
 		}
 		
+		try {
+			Board board = boardService.selectBoard(bno);
+			
+			request.setAttribute("b", board);
+			
+			request.getRequestDispatcher("WEB-INF/views/board/boardDetailView.jsp").forward(request, response);
+			
+		} catch (Exception e) {
+			request.setAttribute("msg", "게시판 상세 조회 실패");
+			request.getRequestDispatcher("WEB-INF/views/common/errorPage.jsp").forward(request, response);
+			
+			e.printStackTrace();
+		}
 	}
 
 	/**

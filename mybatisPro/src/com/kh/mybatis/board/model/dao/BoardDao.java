@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.kh.mybatis.board.model.vo.Board;
 import com.kh.mybatis.board.model.vo.PageInfo;
+import com.kh.mybatis.board.model.vo.SearchCondition;
 
 public class BoardDao {
 
@@ -28,6 +29,26 @@ public class BoardDao {
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
 		
 		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, rowBounds);
+	}
+
+	public ArrayList<Board> selectListCon(SqlSession sqlSession, SearchCondition sc, PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectListCon", sc, rowBounds);
+	}
+
+	public int getListCountCon(SqlSession sqlSession, SearchCondition sc) {
+		return sqlSession.selectOne("boardMapper.getListCountCon", sc);
+	}
+
+	public int addCount(SqlSession sqlSession, int boardNo) {
+		return sqlSession.update("boardMapper.addCount", boardNo);
+	}
+
+	public Board selectBoard(SqlSession sqlSession, int boardNo) {
+		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
 	}
 
 }

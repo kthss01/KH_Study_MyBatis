@@ -58,31 +58,25 @@ public class BoardServiceImpl implements BoardService {
 		return listCount;
 	}
 
-	@Override
-	public void addCount(int bno) throws Exception {
-		SqlSession sqlSession = getSqlSession();
-
-		int result = boardDao.addCount(sqlSession, bno);
-		
-		if (result > 0) {
-			sqlSession.commit();
-		} else {
-			sqlSession.rollback();
-			throw new Exception();
-		}
-		
-		sqlSession.close();
-	}
 
 	@Override
 	public Board selectBoard(int bno) throws Exception {
 		SqlSession sqlSession = getSqlSession();
 
-		Board board = boardDao.selectBoard(sqlSession, bno);
+		int result = boardDao.updateCount(sqlSession, bno);
+		
+		Board b = null;
+		if (result > 0) {
+			sqlSession.commit();
+			b = boardDao.selectBoard(sqlSession, bno);
+		} else {
+			sqlSession.rollback();
+			throw new Exception("updateCount error");
+		}
 		
 		sqlSession.close();
 		
-		return board;
+		return b;
 	}
 
 }

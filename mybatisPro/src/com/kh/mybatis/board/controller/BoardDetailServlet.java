@@ -37,18 +37,9 @@ public class BoardDetailServlet extends HttpServlet {
 		int bno = Integer.parseInt(request.getParameter("bno"));
 		
 		try {
-			boardService.addCount(bno);
-		} catch (Exception e) {
-			request.setAttribute("msg", "게시판 조회 수 증가 실패");
-			request.getRequestDispatcher("WEB-INF/views/common/errorPage.jsp").forward(request, response);
+			Board b = boardService.selectBoard(bno);
 			
-			e.printStackTrace();
-		}
-		
-		try {
-			Board board = boardService.selectBoard(bno);
-			
-			request.setAttribute("b", board);
+			request.setAttribute("b", b);
 			
 			request.getRequestDispatcher("WEB-INF/views/board/boardDetailView.jsp").forward(request, response);
 			

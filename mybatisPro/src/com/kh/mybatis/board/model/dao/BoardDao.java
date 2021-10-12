@@ -43,8 +43,8 @@ public class BoardDao {
 		return sqlSession.selectOne("boardMapper.getListCountCon", sc);
 	}
 
-	public int addCount(SqlSession sqlSession, int boardNo) {
-		return sqlSession.update("boardMapper.addCount", boardNo);
+	public int updateCount(SqlSession sqlSession, int boardNo) {
+		return sqlSession.update("boardMapper.updateCount", boardNo);
 	}
 
 	public Board selectBoard(SqlSession sqlSession, int boardNo) {

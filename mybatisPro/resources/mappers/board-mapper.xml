@@ -63,14 +63,14 @@
 		ORDER BY BOARD_NO DESC
 	</select>
 	
-	<update id="addCount">
+	<update id="updateCount" parameterType="_int">
 		UPDATE BOARD
 		SET COUNT = COUNT + 1
 		WHERE BOARD_NO = #{boardNo}
 	</update>
 	
-	<select id="selectBoard" resultMap="boardResultMap">
-		SELECT BOARD_NO, BOARD_TITLE, USER_ID, COUNT, CREATE_DATE
+	<select id="selectBoard" parameterType="_int" resultMap="boardResultMap">
+		SELECT BOARD_NO, BOARD_TITLE, USER_ID, COUNT, CREATE_DATE, BOARD_CONTENT
 		FROM BOARD B
 		JOIN MEMBER ON(BOARD_WRITER=USER_NO)
 		WHERE B.STATUS='Y'

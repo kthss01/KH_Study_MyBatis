@@ -16,8 +16,6 @@ public interface BoardService {
 
 	int getListCountCon(SearchCondition sc) throws Exception;
 
-	void addCount(int bno) throws Exception;
-
 	Board selectBoard(int bno) throws Exception;
 
 }
